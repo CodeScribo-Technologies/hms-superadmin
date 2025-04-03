@@ -13,16 +13,48 @@ export interface VendorListRequest {
 }
 
 export type VendorCreateRequest = {
+  vendor_name: string;
   name: string;
   logo: string;
-  is_master: boolean;
+  email: string;
+  password: string;
+  is_master?: boolean;
   is_active: boolean;
+  packageDetails: {
+    package_type: string;
+    package_id:string;
+    price: number;
+    period: string;
+    interval: number;
+    is_active: boolean;
+    is_trial: boolean;
+    trial_period_in_days: number;
+    features: {
+      id: string;
+      value: string;
+    }[];
+  };
 };
 
 export type VendorUpdateRequest = {
-  uuid: string;
-  name: string;
-  logo: string;
-  is_master: boolean;
-  is_active: boolean;
-};
+    uuid: string;
+    name: string;
+    logo: string;
+    is_master: boolean;
+    is_active: boolean;
+    packageDetails?: {
+      name: string;
+      package_type: string;
+      package_id:string;
+      price: number;
+      period: string;
+      interval: number;
+      is_active: boolean;
+      trial_period_in_days: number;
+      features: {
+        id: string;
+        value: string;
+      }[];
+    };
+  };
+  
