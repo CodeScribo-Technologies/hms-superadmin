@@ -50,9 +50,9 @@ const VendorList = () => {
     {
       title: "Organization Name",
       dataIndex: "name",
-      width: "auto",// Adjust width as needed
+      width: "auto",
       onCell: () => ({
-        style: { textAlign: "left" }, // Align left to match other columns
+        style: { textAlign: "left" }, 
       }),
       render: (_, record) => (
         <p className="text-sm font-medium">{record?.name}</p>
@@ -61,7 +61,7 @@ const VendorList = () => {
     {
       title: "Active Status",
       dataIndex: "is_active",
-      width: "auto", // Let the column take remaining space evenly
+      width: "auto", 
       render: (_, record) => (
         <p className="text-sm font-medium">
           {record.is_active ? "Active" : "Inactive"}
@@ -71,7 +71,7 @@ const VendorList = () => {
     {
       title: "Created At",
       dataIndex: "CreatedAt",
-      width: "auto", // Ensure equal spacing
+      width: "auto", 
       render: (_, record) =>
         record?.CreatedAt
           ? format(new Date(record?.CreatedAt), "dd MMM yyyy")
@@ -81,7 +81,7 @@ const VendorList = () => {
       title: "Actions",
       className: "!text-right",
       key: "action",
-      width: 120, // Set fixed width for action buttons
+      width: 120, 
       render: (record: Vendor) => (
         <Flex gap="small" align="center" justify="start">
           <Button
