@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   Flex,
-  Input,
   Table,
   Typography,
 } from "antd";
@@ -27,15 +26,15 @@ const VendorList = () => {
 
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
 
-  const { search, handleSearch, handleOnSearchChange, handlePaginationChange } =
+  const { handlePaginationChange } =
     useDataTableFilter({
       fetchData: (queryParams) => fetchVendors(queryParams),
     });
 
-// Fetch vendors on mount with default pagination
-useEffect(() => {
-  fetchVendors({ page: 1, limit: 10 });
-}, [fetchVendors]); 
+  // Fetch vendors on mount with default pagination
+  useEffect(() => {
+    fetchVendors({ page: 1, limit: 10 });
+  }, [fetchVendors]);
 
 
   // Update state when data is available
@@ -59,30 +58,14 @@ useEffect(() => {
       render: (_, __, index) => index + 1,
     },
     {
-      title: t("vendor.name"),
+      title: "Name",
       dataIndex: "name",
       render: (_, record) => (
         <p className="text-sm font-medium">{record?.name}</p>
       ),
     },
     {
-      title: t("vendor.logo"),
-      dataIndex: "logo",
-      render: (_, record) => (
-        <img src={record.logo} alt="logo" className="w-10 h-10 rounded-md" />
-      ),
-    },
-    {
-      title: t("vendor.is_master"),
-      dataIndex: "is_master",
-      render: (_, record) => (
-        <p className="text-sm font-medium">
-          {record.is_master ? "Yes" : "No"}
-        </p>
-      ),
-    },
-    {
-      title: t("vendor.is_active"),
+      title: "Active Status",
       dataIndex: "is_active",
       render: (_, record) => (
         <p className="text-sm font-medium">
@@ -91,7 +74,7 @@ useEffect(() => {
       ),
     },
     {
-      title: t("vendor.created_at"),
+      title: "Created At",
       dataIndex: "CreatedAt",
       render: (_, record) =>
         record?.CreatedAt
@@ -99,19 +82,11 @@ useEffect(() => {
           : "-",
     },
     {
-      title: t("vendor.updated_at"),
-      dataIndex: "UpdatedAt",
-      render: (_, record) =>
-        record?.UpdatedAt
-          ? format(new Date(record?.UpdatedAt), "dd MMM yyyy")
-          : "-",
-    },
-    {
-      title: t("vendor.actions"),
+      title: "Actions",
       className: "!text-right",
       key: "action",
       render: (record: Vendor) => (
-        <Flex gap="small" align="center" justify="end">
+        <Flex gap="small" align="center" justify="start">
           <Button
             color="default"
             variant="filled"
@@ -122,6 +97,7 @@ useEffect(() => {
       ),
     },
   ];
+
 
   return (
     <Loader isLoading={isLoading}>
@@ -135,23 +111,10 @@ useEffect(() => {
       <Card>
         <div className="mb-6">
           <Typography.Title level={3}>{t("vendor.title")}</Typography.Title>
-          <Flex justify="space-between" align="center" className="flex-wrap gap-2">
-            <Flex className="gap-2" align="center">
-              <Input.Search
-                value={search}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleOnSearchChange(e.target.value)
-                }
-                onSearch={handleSearch}
-                allowClear
-                placeholder="Search"
-              />
-            </Flex>
-            <Flex justify="end" className="gap-4">
-              <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
-                <Icon name="plus" /> {t("vendor.addNew")}
-              </Button>
-            </Flex>
+          <Flex justify="end" align="center" className="flex-wrap gap-2">
+            <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
+              <Icon name="plus" /> {t("vendor.addNew")}
+            </Button>
           </Flex>
         </div>
 
