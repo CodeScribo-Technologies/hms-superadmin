@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./redux/store" // Ensure this is the correct path
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import EmailPassword, {
-  signOut,
-} from "supertokens-auth-react/recipe/emailpassword";
+import EmailPassword, { signOut } from "supertokens-auth-react/recipe/emailpassword";
 import Session from "supertokens-auth-react/recipe/session";
 import { EmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/emailpassword/prebuiltui";
 import { PreBuiltRecipes } from "supertokens-auth-react/lib/build/ui/types";
@@ -33,9 +33,8 @@ const recipeList: any[] = [
     },
     onHandleEvent: async (context) => {
       if (context.action === "SUCCESS") {
-        window.location.href = "/dashboard";
+        window.location.href = "/vendorlist";
         if (context.isNewRecipeUser && context.user.loginMethods.length === 1) {
-          // Sign out the user and redirect to the auth page
           await signOut();
           window.location.href = "/auth";
         }
@@ -46,7 +45,9 @@ const recipeList: any[] = [
     tokenTransferMethod: "header", // or "cookie"
   }),
 ];
+
 const preBuiltUIList: PreBuiltRecipes = [EmailPasswordPreBuiltUI];
+
 if (import.meta.env.VITE_ENABLE_EMAIL_VERIFICATION === "true") {
   recipeList.push(
     EmailVerification.init({
@@ -55,6 +56,7 @@ if (import.meta.env.VITE_ENABLE_EMAIL_VERIFICATION === "true") {
   );
   preBuiltUIList.push(EmailVerificationPreBuiltUI);
 }
+
 SuperTokens.init({
   appInfo: {
     appName: "HMS",
@@ -70,12 +72,15 @@ SuperTokens.init({
     }
   `,
 });
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <SuperTokensWrapper>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     </SuperTokensWrapper>
   </React.StrictMode>
 );

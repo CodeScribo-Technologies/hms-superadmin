@@ -5,7 +5,7 @@ import * as reactRouterDom from "react-router-dom";
 import NavBar from "./components/NavBar";
 
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import Dashboard from "./components/Dashboard";
+import VendorList from "./pages/Vendor/List/VendorList"
 
 function App() {
   return (
@@ -22,10 +22,10 @@ function App() {
 
         {/* Protected Dashboard */}
         <Route
-          path="/dashboard"
+          path="/vendorlist"
           element={
             <SessionAuth>
-              <Dashboard />
+              <VendorList />
             </SessionAuth>
           }
         />

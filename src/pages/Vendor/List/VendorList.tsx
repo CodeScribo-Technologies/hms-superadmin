@@ -5,7 +5,6 @@ import {
   Card,
   Flex,
   Input,
-  message,
   Table,
   Typography,
 } from "antd";
@@ -13,63 +12,31 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import ConfirmModal from "../../../components/Modal/ConfirmModal";
 import Icon from "../../../components/Icon/Icon";
-import {
-  useDeleteVendorMutation,
-  useLazyGetVendorListQuery,
-} from "@/redux/feature/api/vendor";
-import Loader from "@/components/Loader";
-import { Vendor } from "@/type/vendor";
-import { useDataTableFilter } from "@/hooks/useDataTableFilter";
-import { handleApiError } from "@/utils/api";
+import { useLazyGetVendorListQuery } from "../../../redux/feature/api/vendor";
+import Loader from "../../../components/Loader/index";
+import { Vendor } from "../../../type/vendor";
+import { useDataTableFilter } from "../../../hooks/useDataTableFilter";
 
 const VendorList = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
 
   const [fetchVendors, { data: vendorData, isFetching }] =
     useLazyGetVendorListQuery();
-  const [deleteVendor, { isLoading: isDeleting }] = useDeleteVendorMutation();
 
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>(vendorData?.data || []);
 
   const { search, handleSearch, handleOnSearchChange, handlePaginationChange } =
-    useDataTableFilter(
-      {
-        fetchData: (queryParams) => fetchVendors(queryParams),
-      },
-    );
+    useDataTableFilter({
+      fetchData: (queryParams) => fetchVendors(queryParams),
+    });
 
   useEffect(() => {
     if (vendorData?.data) {
       setFilteredVendors(vendorData.data);
     }
   }, [vendorData]);
-
-  const showConfirmModal = (vendor: Vendor) => {
-    setSelectedVendor(vendor);
-    setIsModalVisible(true);
-  };
-
-  const handleConfirm = async () => {
-    if (selectedVendor) {
-      const result = await deleteVendor(selectedVendor.uuid);
-      if ("error" in result) {
-        handleApiError(result.error);
-      } else {
-        message.success("Vendor deleted successfully");
-        fetchVendors({ page: 1, limit: 10 });
-      }
-    }
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
 
   const columns: TableProps<Vendor>["columns"] = [
     {
@@ -141,13 +108,6 @@ const VendorList = () => {
             icon={<Icon name="pencil" />}
             onClick={() => navigate(`/edit-vendor/${record.uuid}`)}
           />
-          <Button
-            loading={isDeleting && selectedVendor?.uuid === record.uuid}
-            color="danger"
-            variant="filled"
-            icon={<Icon name="trash" />}
-            onClick={() => showConfirmModal(record)}
-          />
         </Flex>
       ),
     },
@@ -199,11 +159,6 @@ const VendorList = () => {
               `${range[0]}-${range[1]} of ${total} items`,
           }}
           onChange={handlePaginationChange}
-        />
-        <ConfirmModal
-          visible={isModalVisible}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
         />
       </Card>
     </Loader>
