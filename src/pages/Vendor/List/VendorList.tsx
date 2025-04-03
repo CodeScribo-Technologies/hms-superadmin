@@ -25,18 +25,28 @@ const VendorList = () => {
   const [fetchVendors, { data: vendorData, isFetching }] =
     useLazyGetVendorListQuery();
 
-  const [filteredVendors, setFilteredVendors] = useState<Vendor[]>(vendorData?.data || []);
+  const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
 
   const { search, handleSearch, handleOnSearchChange, handlePaginationChange } =
     useDataTableFilter({
       fetchData: (queryParams) => fetchVendors(queryParams),
     });
 
+// Fetch vendors on mount with default pagination
+useEffect(() => {
+  fetchVendors({ page: 1, limit: 10 });
+}, [fetchVendors]); 
+
+
+  // Update state when data is available
   useEffect(() => {
     if (vendorData?.data) {
       setFilteredVendors(vendorData.data);
     }
   }, [vendorData]);
+
+  // Ensure Loader disappears correctly
+  const isLoading = isFetching && !vendorData;
 
   const columns: TableProps<Vendor>["columns"] = [
     {
@@ -114,7 +124,7 @@ const VendorList = () => {
   ];
 
   return (
-    <Loader isLoading={isFetching}>
+    <Loader isLoading={isLoading}>
       <Breadcrumb
         className="mb-4"
         items={[
