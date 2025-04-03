@@ -36,7 +36,7 @@ const VendorList = () => {
     if (pagination.current && pagination.pageSize) {
       setSearchParams({ page: pagination.current.toString(), limit: pagination.pageSize.toString() });
     }
-  }; 
+  };
   const columns: TableProps<Vendor>["columns"] = [
     {
       title: <p className="w-full text-center">#</p>,
@@ -94,22 +94,22 @@ const VendorList = () => {
       ),
     },
   ];
-  
+
   return (
     <Loader isLoading={isLoading}>
       <Card>
-        {/* Page Title */}
-        <div className="mb-6">
-        <Typography.Title level={3}>Vendor's List</Typography.Title>
-        </div>
-
-        {/* Button Alignment */}
-        <Flex justify="end" align="center" className="flex-wrap gap-2 mb-4">
-          <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
-          <Icon name="plus" /> Add New Vendor
-
+        <Flex className="mb-6 flex-wrap w-full items-center justify-between relative">
+          <Typography.Title level={3} className="m-0">Vendor's List</Typography.Title>
+          <Button
+            color="primary"
+            variant="filled"
+            style={{ position: "absolute", right: "20px", top: "45px" }}
+            onClick={() => navigate("/new-vendor")}
+          >
+            <Icon name="plus" /> Add New Vendor
           </Button>
         </Flex>
+
 
         {/* Vendor Table */}
         <Table
@@ -130,6 +130,7 @@ const VendorList = () => {
         />
       </Card>
     </Loader>
+
   );
 };
 export default VendorList;
