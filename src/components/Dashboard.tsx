@@ -46,8 +46,8 @@ export default function Dashboard() {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Dashboard</h1>
-      <p>This is a protected page that only logged-in users can see.</p>
+      <h1>Vendor's List</h1>
+      
 
       <div style={{ marginTop: "2rem", overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
