@@ -18,8 +18,6 @@ export type VendorCreateRequest = {
   logo: string;
   email: string;
   password: string;
-  is_master?: boolean;
-  is_active: boolean;
   packageDetails: {
     package_type: string;
     package_id:string;
@@ -40,8 +38,6 @@ export type VendorUpdateRequest = {
     uuid: string;
     name: string;
     logo: string;
-    is_master: boolean;
-    is_active: boolean;
     packageDetails?: {
       name: string;
       package_type: string;
