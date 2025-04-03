@@ -1,52 +1,44 @@
-import { TableProps } from "antd";
-import {
-  Button,
-  Card,
-  Flex,
-  Table,
-  Typography,
-} from "antd";
+import { TablePaginationConfig, TableProps } from "antd";
+import { Button, Card, Flex, Table, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import Icon from "../../../components/Icon/Icon";
 import { useLazyGetVendorListQuery } from "../../../redux/feature/api/vendor";
 import Loader from "../../../components/Loader/index";
 import { Vendor } from "../../../type/vendor";
-import { useDataTableFilter } from "../../../hooks/useDataTableFilter";
 
 const VendorList = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
 
   const [fetchVendors, { data: vendorData, isFetching }] =
     useLazyGetVendorListQuery();
 
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
 
-  const { handlePaginationChange } =
-    useDataTableFilter({
-      fetchData: (queryParams) => fetchVendors(queryParams),
-    });
-
-  // Fetch vendors on mount with default pagination
   useEffect(() => {
-    fetchVendors({ page: 1, limit: 10 });
-  }, [fetchVendors]);
+    fetchVendors({ page, limit });
+  }, [fetchVendors, page, limit]);
 
-
-  // Update state when data is available
   useEffect(() => {
     if (vendorData?.data) {
       setFilteredVendors(vendorData.data);
     }
   }, [vendorData]);
 
-  // Ensure Loader disappears correctly
   const isLoading = isFetching && !vendorData;
 
-  const columns: TableProps<Vendor>["columns"] = [
+  const handlePaginationChange = (pagination: TablePaginationConfig) => {
+    if (pagination.current && pagination.pageSize) {
+      setSearchParams({ page: pagination.current.toString(), limit: pagination.pageSize.toString() });
+    }
+  };  const columns: TableProps<Vendor>["columns"] = [
     {
       title: <p className="w-full text-center">#</p>,
       dataIndex: "#",
@@ -54,7 +46,7 @@ const VendorList = () => {
       onCell: () => ({
         style: { textAlign: "center" },
       }),
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => (page - 1) * limit + index + 1,
     },
     {
       title: "Name",
@@ -97,7 +89,6 @@ const VendorList = () => {
     },
   ];
 
-
   return (
     <Loader isLoading={isLoading}>
       <Card>
@@ -105,14 +96,14 @@ const VendorList = () => {
         <div className="mb-6">
           <Typography.Title level={3}>{t("Vendor's List")}</Typography.Title>
         </div>
-  
+
         {/* Button Alignment */}
         <Flex justify="end" align="center" className="flex-wrap gap-2 mb-4">
           <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
             <Icon name="plus" /> {t("vendor.addNew")}
           </Button>
         </Flex>
-  
+
         {/* Vendor Table */}
         <Table
           columns={columns}
@@ -121,6 +112,8 @@ const VendorList = () => {
           className="rounded-lg"
           pagination={{
             className: "!mb-0 !mt-6",
+            current: page,
+            pageSize: limit,
             total: vendorData?.total,
             showSizeChanger: true,
             showQuickJumper: true,
@@ -131,8 +124,5 @@ const VendorList = () => {
       </Card>
     </Loader>
   );
-  
-  
 };
-
 export default VendorList;
