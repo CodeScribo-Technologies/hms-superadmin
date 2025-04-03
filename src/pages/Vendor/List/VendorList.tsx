@@ -1,6 +1,5 @@
 import { TableProps } from "antd";
 import {
-  Breadcrumb,
   Button,
   Card,
   Flex,
@@ -8,7 +7,7 @@ import {
   Typography,
 } from "antd";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import Icon from "../../../components/Icon/Icon";
@@ -101,16 +100,10 @@ const VendorList = () => {
 
   return (
     <Loader isLoading={isLoading}>
-      <Breadcrumb
-        className="mb-4"
-        items={[
-          { title: <Link to="/">{t("commonText.home")}</Link> },
-          { title: t("vendor.title") },
-        ]}
-      />
+  
       <Card>
         <div className="mb-6">
-          <Typography.Title level={3}>{t("vendor.title")}</Typography.Title>
+          <Typography.Title level={3}>{t("Vendor's List")}</Typography.Title>
           <Flex justify="end" align="center" className="flex-wrap gap-2">
             <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
               <Icon name="plus" /> {t("vendor.addNew")}
