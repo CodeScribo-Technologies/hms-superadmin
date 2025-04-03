@@ -100,17 +100,20 @@ const VendorList = () => {
 
   return (
     <Loader isLoading={isLoading}>
-  
       <Card>
+        {/* Page Title */}
         <div className="mb-6">
           <Typography.Title level={3}>{t("Vendor's List")}</Typography.Title>
-          <Flex justify="end" align="center" className="flex-wrap gap-2">
-            <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
-              <Icon name="plus" /> {t("vendor.addNew")}
-            </Button>
-          </Flex>
         </div>
-
+  
+        {/* Button Alignment */}
+        <Flex justify="end" align="center" className="flex-wrap gap-2 mb-4">
+          <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
+            <Icon name="plus" /> {t("vendor.addNew")}
+          </Button>
+        </Flex>
+  
+        {/* Vendor Table */}
         <Table
           columns={columns}
           dataSource={filteredVendors || []}
@@ -121,14 +124,15 @@ const VendorList = () => {
             total: vendorData?.total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
+            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
           }}
           onChange={handlePaginationChange}
         />
       </Card>
     </Loader>
   );
+  
+  
 };
 
 export default VendorList;
