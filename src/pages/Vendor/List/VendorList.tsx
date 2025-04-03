@@ -1,6 +1,5 @@
 import { TablePaginationConfig, TableProps } from "antd";
 import { Button, Card, Flex, Table, Typography } from "antd";
-import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
@@ -10,7 +9,6 @@ import Loader from "../../../components/Loader/index";
 import { Vendor } from "../../../type/vendor";
 
 const VendorList = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -38,19 +36,24 @@ const VendorList = () => {
     if (pagination.current && pagination.pageSize) {
       setSearchParams({ page: pagination.current.toString(), limit: pagination.pageSize.toString() });
     }
-  };  const columns: TableProps<Vendor>["columns"] = [
+  }; 
+  const columns: TableProps<Vendor>["columns"] = [
     {
       title: <p className="w-full text-center">#</p>,
       dataIndex: "#",
-      width: 80,
+      width: 250,
       onCell: () => ({
-        style: { textAlign: "center" },
+        style: { textAlign: "start" },
       }),
       render: (_, __, index) => (page - 1) * limit + index + 1,
     },
     {
-      title: "Name",
+      title: "Organization Name",
       dataIndex: "name",
+      width: "auto",// Adjust width as needed
+      onCell: () => ({
+        style: { textAlign: "left" }, // Align left to match other columns
+      }),
       render: (_, record) => (
         <p className="text-sm font-medium">{record?.name}</p>
       ),
@@ -58,6 +61,7 @@ const VendorList = () => {
     {
       title: "Active Status",
       dataIndex: "is_active",
+      width: "auto", // Let the column take remaining space evenly
       render: (_, record) => (
         <p className="text-sm font-medium">
           {record.is_active ? "Active" : "Inactive"}
@@ -67,6 +71,7 @@ const VendorList = () => {
     {
       title: "Created At",
       dataIndex: "CreatedAt",
+      width: "auto", // Ensure equal spacing
       render: (_, record) =>
         record?.CreatedAt
           ? format(new Date(record?.CreatedAt), "dd MMM yyyy")
@@ -76,6 +81,7 @@ const VendorList = () => {
       title: "Actions",
       className: "!text-right",
       key: "action",
+      width: 120, // Set fixed width for action buttons
       render: (record: Vendor) => (
         <Flex gap="small" align="center" justify="start">
           <Button
@@ -88,19 +94,20 @@ const VendorList = () => {
       ),
     },
   ];
-
+  
   return (
     <Loader isLoading={isLoading}>
       <Card>
         {/* Page Title */}
         <div className="mb-6">
-          <Typography.Title level={3}>{t("Vendor's List")}</Typography.Title>
+        <Typography.Title level={3}>Vendor's List</Typography.Title>
         </div>
 
         {/* Button Alignment */}
         <Flex justify="end" align="center" className="flex-wrap gap-2 mb-4">
           <Button color="primary" variant="filled" onClick={() => navigate("/new-vendor")}>
-            <Icon name="plus" /> {t("vendor.addNew")}
+          <Icon name="plus" /> Add New Vendor
+
           </Button>
         </Flex>
 
